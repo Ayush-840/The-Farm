@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriOptima | Smart Farm Resource Allocation Planner</title>
+    <!-- Chart.js for IoT Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="glass-header">
+        <nav>
+            <div class="logo" data-translate="app_title">Agri<span>Optima</span></div>
+            <div class="header-controls">
+                <div class="mode-toggle-container">
+                    <span class="mode-label pro" data-translate="pro_mode">Pro Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="modeInput">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="mode-label farmer" data-translate="farmer_mode">Farmer Mode</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#planner">Planner</a></li>
+                    <li><a href="index1.html">Demo Page</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="planner"
+            style="display: block; padding-top: 6rem; padding-bottom: 2rem; max-width: 1200px; margin: 0 auto; gap: 0;">
+            <div id="dashboard" style="width: 100%;">
+                <div class="glass-panel" id="resultsCard" style="padding: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>Intelligence <span class="gradient-text">Output</span></h2>
+                        <button class="secondary-btn" onclick="window.location.href='index.html'">← Back to
+                            form</button>
+                    </div>
+
+                    <div id="loadingState" class="hidden">
+                        <div class="spinner"></div>
+                        <p>Aggregating seasonal data and executing efficiency constraints...</p>
+                    </div>
+
+                    <div id="emptyState">
+                        <p class="text-muted">Awaiting parameters to generate intelligent agricultural insights.</p>
+                    </div>
+
+                    <div id="resultsContent" class="hidden">
+                        <div class="results-header">
+                            <h2><i class="fas fa-seedling"></i> Personalized Optimization</h2>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <label class="comparison-toggle-wrapper" id="compareToggleLabel">
+                                    <input type="checkbox" id="compareToggle">
+                                    <div class="toggle-switch"></div>
+                                    <span style="font-size: 0.85rem; font-weight: 500; color: #fff;">Compare
+                                        Alternatives</span>
+                                </label>
+                                <button class="secondary-btn" id="exportBtn"><i class="fas fa-download"></i> Export
+                                    data</button>
+                            </div>
+                        </div>
+
+                        <div class="location-summary mb-3">
+                            <i class="icon">📍</i> <span id="resultLocation">State > District > Block</span>
+                        </div>
+
+                        <!-- NEW: "What If" Simulator -->
+                        <div class="result-card full-width simulation-card animate-in mb-4">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <h3 style="margin: 0; color: var(--highlight);"><i class="fas fa-magic"></i> "What If"
+                                    Scenario Simulator</h3>
+                                <span class="badge bg-warning" style="font-size: 0.7rem;">Interactive Mode</span>
+                            </div>
+
+                            <div class="simulator-controls">
+                                <div class="sim-control-group">
+                                    <div class="sim-control-header">
+                                        <span><i class="fas fa-wallet" style="margin-right: 8px;"></i> Total
+                                            Budget</span>
+                                        <span class="sim-val-display" id="simBudgetVal">₹5,00,000</span>
+                                    </div>
+                                    <input type="range" id="simBudget" min="10000" max="2000000" step="5000">
+                                </div>
+
+                                <div class="sim-control-group">
+                                    <div class="sim-control-header">
+                                        <span><i class="fas fa-tint" style="margin-right: 8px;"></i> Water
+                                            Availability</span>
+                                        <span class="sim-val-display" id="simWaterVal">50,000 L</span>
+                                    </div>
+                                    <input type="range" id="simWater" min="1000" max="500000" step="1000">
+                                </div>
+
+                                <div class="sim-control-group">
+                                    <div class="sim-control-header">
+                                        <span><i class="fas fa-vector-square" style="margin-right: 8px;"></i> Land
+                                            Area</span>
+                                        <span class="sim-val-display" id="simLandVal">10.0 Acres</span>
+                                    </div>
+                                    <input type="range" id="simLand" min="0.5" max="100" step="0.5">
+                                </div>
+                            </div>
+
+                            <div class="impact-grid">
+                                <div class="impact-item">
+                                    <span class="impact-label">Profit Impact</span>
+                                    <span class="impact-val" id="simProfitVal">₹0</span>
+                                    <span class="impact-delta" id="simProfitDelta">Baseline</span>
+                                </div>
+                                <div class="impact-item">
+                                    <span class="impact-label">Risk Shift</span>
+                                    <span class="impact-val" id="simRiskVal">Low</span>
+                                    <span class="impact-delta" id="simRiskDelta">No Change</span>
+                                </div>
+                                <div class="impact-item">
+                                    <span class="impact-label">Best Crop</span>
+                                    <span class="impact-val" id="simCropVal">---</span>
+                                    <span class="impact-delta" id="simCropDelta">Primary</span>
+                                </div>
+                            </div>
+
+                            <div id="cropChangeAlert" class="best-crop-alert">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Strategy Shift</strong>: Under these
+                                conditions, <span id="newBestCrop">Crop</span> becomes more optimal than your original
+                                project.
+                            </div>
+                        </div>
+
+                        <div class="input-panel glass-panel mt-3">
+                            <h3 data-translate="step_2_title">Detailed Parameters</h3>
+                        </div>
+                        <div class="weather-panel mb-3">
+                            <div class="weather-header">
+                                <h4>Live Weather Intelligence</h4>
+                                <span class="badge" id="riskLevelBadge">Analyzing...</span>
+                            </div>
+                            <div class="weather-metrics">
+                                <div class="w-metric"><span class="w-val" id="wTemp">--°C</span><span
+                                        class="w-label">Temp</span></div>
+                                <div class="w-metric"><span class="w-val" id="wHumid">--%</span><span
+                                        class="w-label">Humidity</span></div>
+                                <div class="w-metric"><span class="w-val" id="wRain">--mm</span><span
+                                        class="w-label">Est. Rain</span></div>
+                                <div class="w-metric"><span class="w-val" id="wRainProb">--%</span><span
+                                        class="w-label">Rain Prob</span></div>
+                            </div>
+                            <p class="weather-impact" id="wImpact">Fetching meteorological data for location...</p>
+                        </div>
+
+                        <!-- Primary Recommendation metrics -->
+                        <div class="metric highlight-metric">
+                            <span class="label">Recommended Crop</span>
+                            <span class="value success-text" id="primaryCrop">---</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Est. Total Yield</span>
+                            <span class="value" id="yieldValue">--- Tons</span>
+                            <div style="font-size: 0.75rem; color: var(--highlight); margin-top: 2px;">
+                                <i class="fas fa-shield-alt"></i> Risk-adjusted: <span id="riskAdjustedYield">--</span>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Est. Water Efficiency</span>
+                            <span class="value text-highlight" id="waterEffValue">---%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Est. Total Cost</span>
+                            <span class="value" id="costValue">₹0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Est. Revenue</span>
+                            <span class="value" id="revenueValue">₹0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Net Profit Margin</span>
+                            <span class="value text-highlight" id="profitMarginValue">---</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Irrigation Strategy</span>
+                            <span class="value success-text" id="irrigationValue">---</span>
+                        </div>
+
+                        <!-- Financial Assistance (Subsidies) - After Profit Analysis -->
+                        <div id="subsidyCard" class="result-card full-width glass-panel mt-4 p-4 animate-in" style="text-align: center;">
+                            <h3 data-translate="subsidies" style="text-align: center;"><i class="fas fa-hand-holding-usd"></i> Financial Assistance
+                                (Subsidies)</h3>
+                            <p class="section-label" style="margin-bottom: 0.5rem; text-align: center;">Schemes based on your Profile</p>
+                            <div id="subsidyList" class="subsidy-list">
+                                <!-- Schemes will be injected here -->
+                                <div class="text-muted" style="font-size: 0.85rem; text-align: center;">Calculating eligibility...</div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Crop Comparison Mode (Collapsible) -->
+                        <div id="comparisonSection" class="result-card full-width hidden p-4 animate-in">
+                            <h3><i class="fas fa-balance-scale"></i> Crop Comparison Mode</h3>
+                            <div class="comparison-section">
+                                <table class="comparison-table" id="comparisonTable">
+                                    <thead>
+                                        <tr id="comparisonHead">
+                                            <th>Factor</th>
+                                            <!-- Dynamic Headers -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="comparisonBody">
+                                        <!-- Dynamic Rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Resource Allocation Panel -->
+                        <div class="allocation-panel mt-4 mb-3">
+                            <p class="section-label">Resource Allocation Engine</p>
+                            <div class="allocation-item">
+                                <div
+                                    style="display:flex; justify-content:space-between; font-size: 0.85rem; margin-bottom: 0.3rem;">
+                                    <span>Land Utilized</span>
+                                    <span id="landAllocText">0 / 0 Acres</span>
+                                </div>
+                                <div class="progress-bar-container" id="landAllocBarContainer" style="display: flex;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="allocation-item mt-2">
+                                <div
+                                    style="display:flex; justify-content:space-between; font-size: 0.85rem; margin-bottom: 0.3rem;">
+                                    <span>Water Consumed</span>
+                                    <span id="waterAllocText">0 / 0 Liters</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-fill" id="waterAllocBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Detailed Allocation Layout Visualization -->
+                        <div class="result-card full-width mt-4 animate-in">
+                            <h3 style="margin-bottom: 1rem;"><i class="fas fa-th"></i> Detailed Allocation Layout</h3>
+                            <div class="visualization-area"
+                                style="padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                <div class="farm-grid" id="farm-grid"
+                                    style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; max-width: 300px; margin: 0 auto 1rem; aspect-ratio: 1/1;">
+                                    <!-- Grid cells will be generated via JS -->
+                                </div>
+                                <div class="legend"
+                                    style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; font-size: 0.85rem;">
+                                    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;"><span
+                                            class="color-box unallocated"
+                                            style="width: 12px; height: 12px; border-radius: 3px; background: rgba(255,255,255,0.05);"></span>Unallocated
+                                    </div>
+                                    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;"><span
+                                            class="color-box wheat"
+                                            style="width: 12px; height: 12px; border-radius: 3px; background: #f59e0b;"></span>Primary
+                                    </div>
+                                    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;"><span
+                                            class="color-box corn"
+                                            style="width: 12px; height: 12px; border-radius: 3px; background: #3b82f6;"></span>Alternative
+                                        1</div>
+                                    <div class="legend-item" style="display: flex; align-items: center; gap: 5px;"><span
+                                            class="color-box soy"
+                                            style="width: 12px; height: 12px; border-radius: 3px; background: #10b981;"></span>Alternative
+                                        2</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reasoning-panel mt-4 mb-3">
+                            <p class="section-label">AI Crop Reasoning</p>
+                            <p class="text-muted" id="aiReasoning" style="font-size: 0.9rem; line-height: 1.5;">
+                                Generating hyperlocal intelligence based on submitted constraints...</p>
+                        </div>
+
+                        <!-- Specialty Cards -->
+                        <!-- ESG & Sustainability Score -->
+                        <div id="sustainabilityCard" class="sustainability-card result-card full-width glass-panel mt-4 p-4 animate-in" style="text-align: center;">
+                            <div
+                                style="display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem;">
+                                <h3 style="margin: 0 0 1rem 0; color: #10b981; text-align: center;" data-translate="esg_score"><i
+                                        class="fas fa-leaf"></i> ESG & Sustainability
+                                    Score</h3>
+                                <div id="esgBadge" class="badge"
+                                    style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 12px; font-size: 0.75rem;">
+                                    ESG Rating: --</div>
+                            </div>
+
+                            <div class="esg-dashboard">
+                                <div class="esg-main-score">
+                                    <div class="esg-circle">
+                                        <svg viewBox="0 0 36 36" class="circular-chart">
+                                            <path class="circle-bg"
+                                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <path id="esgCirclePath" class="circle" stroke-dasharray="0, 100"
+                                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <text x="18" y="20.35" class="percentage" id="sustainabilityScore">0%</text>
+                                        </svg>
+                                    </div>
+                                    <span class="esg-label"
+                                        style="display:block; text-align:center; margin-top:0.5rem; font-size:0.75rem;">Sustainability
+                                        Index</span>
+                                </div>
+
+                                <div class="esg-details">
+                                    <div class="esg-detail-item">
+                                        <div class="esg-detail-info">
+                                            <span class="esg-detail-label" data-translate="carbon_footprint"><i
+                                                    class="fas fa-cloud"></i> Carbon
+                                                Footprint</span>
+                                            <span class="esg-detail-val" id="carbonFootprint">0 kg CO2e</span>
+                                        </div>
+                                        <div class="esg-progress-bg">
+                                            <div id="carbonBar" class="esg-progress-fill carbon" style="width: 0%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="esg-detail-item">
+                                        <div class="esg-detail-info">
+                                            <span class="esg-detail-label" data-translate="groundwater"><i
+                                                    class="fas fa-water"></i> Groundwater
+                                                impact</span>
+                                            <span class="esg-detail-val" id="groundwaterDepletion">0 L Impact</span>
+                                        </div>
+                                        <div class="esg-progress-bg">
+                                            <div id="waterImpactBar" class="esg-progress-fill water" style="width: 0%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="esg-detail-item">
+                                        <div class="esg-detail-info">
+                                            <span class="esg-detail-label" data-translate="organic_boost"><i
+                                                    class="fas fa-vial"></i> Organic
+                                                Boost</span>
+                                            <span class="esg-detail-val" id="organicBoost">+0 pts</span>
+                                        </div>
+                                        <div class="esg-progress-bg">
+                                            <div id="organicBar" class="esg-progress-fill organic" style="width: 0%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="esgAdviceBox" class="conservation-box" style="margin-top: 1.5rem;">
+                                <div class="conservation-title"><i class="fas fa-globe-americas"></i><span>ESG &
+                                        Investor Strategy</span></div>
+                                <p id="esgAdviceText" class="conservation-text">Analyzing environmental impact of your
+                                    crop allocation...</p>
+                            </div>
+                        </div>
+
+                        <div id="riskCard" class="result-card full-width glass-panel mt-4 p-4 animate-in" style="text-align: center;">
+                            <h3 data-translate="market_risk" style="text-align: center;"><i class="fas fa-chart-area"></i> Market Price Risk Meter
+                            </h3>
+                            <div class="sustainability-grid" style="justify-content: center; max-width: 600px; margin: 0 auto;">
+                                <div class="sus-metric"><span class="sus-label">Risk Level</span><span class="sus-val"
+                                        id="riskLevel">Moderate</span></div>
+                                <div class="sus-metric"><span class="sus-label">Stability Score</span><span
+                                        class="sus-val" id="stabilityScore">--/10</span></div>
+                            </div>
+                            <div id="riskActionBox" class="conservation-box" style="max-width: 700px; margin: 1.5rem auto 0;">
+                                <div class="conservation-title" style="justify-content: center;"><i class="fas fa-shield-alt"></i><span>Market
+                                        Strategy</span></div>
+                                <p id="riskActionText" class="conservation-text" style="text-align: center;">Analyzing market volatility patterns
+                                    for your selected crop...</p>
+                            </div>
+                        </div>
+
+                        <div id="breakEvenCard" class="result-card full-width glass-panel mt-4 p-4 animate-in">
+                            <h3 data-translate="break_even"><i class="fas fa-calculator"></i> Break-even Analysis</h3>
+                            <div class="sustainability-grid">
+                                <div class="sus-metric"><span class="sus-label">Cost per Acre</span><span
+                                        class="sus-val" id="costPerAcre">₹0</span></div>
+                                <div class="sus-metric"><span class="sus-label">Break-even Price</span><span
+                                        class="sus-val" id="breakEvenPrice" style="color: var(--highlight);">₹0/q</span>
+                                </div>
+                            </div>
+                            <div id="profitShieldBox" class="conservation-box"
+                                style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+                                <div class="conservation-title">
+                                    <i class="fas fa-shield-virus"></i>
+                                    <span>Profit Protection Shield</span>
+                                </div>
+                                <p id="profitShieldText" class="conservation-text">
+                                    Calculating your financial safety margin based on current market trends...
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="soilHealthCard" class="result-card full-width glass-panel mt-4 p-4 animate-in">
+                            <h3 data-translate="soil_health"><i class="fas fa-flask"></i> Soil Health & Fertilizer
+                                Planner</h3>
+                            <div class="sustainability-grid">
+                                <div class="sus-metric"><span class="sus-label">Soil pH Status</span><span
+                                        class="sus-val" id="phStatus">--</span></div>
+                                <div class="sus-metric"><span class="sus-label">Nutrient Alert</span><span
+                                        class="sus-val" id="nutrientAlert"
+                                        style="font-size: 0.9rem; color: var(--highlight);">Stable</span></div>
+                            </div>
+                            <div class="mt-3">
+                                <h4 style="font-size: 1rem; color: #fff; margin-bottom: 0.5rem;"><i
+                                        class="fas fa-calendar-alt"></i> Fertilizer Schedule</h4>
+                                <div id="fertilizerSchedule" class="mandi-grid"
+                                    style="grid-template-columns: 1fr; gap: 0.5rem;">
+                                    <!-- Schedule items will be injected here -->
+                                </div>
+                            </div>
+                            <div id="soilAdviceBox" class="conservation-box"
+                                style="background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.3);">
+                                <div class="conservation-title" style="color: #a78bfa;">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Soil Correction Advice</span>
+                                </div>
+                                <p id="soilAdviceText" class="conservation-text">
+                                    Enter your soil pH to see specific correction strategies...
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="climateRiskCard" class="result-card full-width glass-panel mt-4 p-4 animate-in">
+                            <h3 data-translate="climate_risk"><i class="fas fa-cloud-sun-rain"></i> Climate Resilience &
+                                Risk</h3>
+                            <div class="sustainability-grid">
+                                <div class="sus-metric"><span class="sus-label">Rainfall Deviation</span><span
+                                        class="sus-val" id="rainDeviation">--</span></div>
+                                <div class="sus-metric"><span class="sus-label">Failure Probability</span><span
+                                        class="sus-val" id="failureProb" style="color: var(--highlight);">0%</span>
+                                </div>
+                            </div>
+                            <div id="climateStabilityBox" class="conservation-box"
+                                style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3);">
+                                <div class="conservation-title" style="color: #fbbf24;">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Stability Outlook</span>
+                                </div>
+                                <p id="climateStabilityText" class="conservation-text">
+                                    Analyzing rainfall patterns and seasonal volatility for your region...
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="creditCard" class="result-card full-width glass-panel mt-4 p-4 animate-in">
+                            <h3 data-translate="credit_score_title"><i class="fas fa-credit-card"></i> Farmer Credit &
+                                Loan Eligibility</h3>
+                            <div class="sustainability-grid">
+                                <div class="sus-metric"><span class="sus-label">Agri-Credit Score</span><span
+                                        class="sus-val" id="creditScore">--</span></div>
+                                <div class="sus-metric"><span class="sus-label">Loan Eligibility</span><span
+                                        class="sus-val" id="loanStatus"
+                                        style="font-size: 0.9rem; color: var(--status-safe);">Checking...</span></div>
+                            </div>
+                            <div id="creditAdviceBox" class="conservation-box"
+                                style="background: rgba(30, 64, 175, 0.08); border-color: rgba(30, 64, 175, 0.3);">
+                                <div class="conservation-title" style="color: #60a5fa;">
+                                    <i class="fas fa-university"></i>
+                                    <span>Banker's Perspective</span>
+                                </div>
+                                <p id="creditAdviceText" class="conservation-text">
+                                    Your credit score is calculated based on your land assets, crop profit margins, and
+                                    water security.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="mandiConnectCard" class="result-card full-width glass-panel mt-4 p-4 animate-in">
+                            <h3 data-translate="mandi_connect"><i class="fas fa-truck-loading"></i> Mandi & Buyer
+                                Connect</h3>
+                            <div class="sustainability-grid">
+                                <div class="sus-metric"><span class="sus-label">Nearby APMC Hub</span><span
+                                        class="sus-val" id="nearbyApmc" style="font-size: 0.9rem;">--</span></div>
+                                <div class="sus-metric"><span class="sus-label">Transport Cost (Est)</span><span
+                                        class="sus-val" id="transportCost" style="color: var(--highlight);">₹0</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="sus-label" style="display: block; margin-bottom: 5px;">Best Selling
+                                    District</span>
+                                <div id="bestDistrictTag" class="badge-pill"
+                                    style="display: inline-block; background: var(--glass-light); padding: 5px 12px; border-radius: 20px; font-weight: 600; color: #fff;">
+                                    --
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-card full-width">
+                            <h3><i class="fas fa-chart-line"></i> Market Intelligence (APMC)</h3>
+                            <div class="mandi-grid">
+                                <div class="mandi-stat">
+                                    <span>Current Mandi Price</span>
+                                    <strong id="mandiCurrent">₹0/q</strong>
+                                </div>
+                                <div class="mandi-stat">
+                                    <span>3-Month Forecast</span>
+                                    <strong id="mandiForecast" class="text-highlight">₹0/q</strong>
+                                </div>
+                                <div class="mandi-stat advisor">
+                                    <span>Profit Advisor</span>
+                                    <em id="mandiAdvisor">Loading insights...</em>
+                                </div>
+                            </div>
+                            <div class="forecast-hint">
+                                <small id="forecastReasoning">* Based on historical volatility and seasonal arrival
+                                    patterns.</small>
+                            </div>
+                        </div>
+
+                        <div class="chart-placeholder">
+                            <p class="section-label">Top Optimal Crops</p>
+                            <div class="crop-list" id="cropSuggestions">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- NEW STANDALONE: Season-Wise Crop Library -->
+                        <div class="library-placeholder mt-4">
+                            <p class="section-label">Season-Wise Crop Library</p>
+                            <div class="library-info mb-2">
+                                <span class="badge" id="libSeasonBadge">Detected: ---</span>
+                            </div>
+                            <div class="crop-list" id="cropLibraryList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Add a raw JSON dump button for the specific architectural requirement -->
+                        <button id="viewJsonBtn" class="secondary-btn">View API JSON Payload</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JSON Payload Modal -->
+    <div id="jsonModal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <h3>API Structured Output</h3>
+            <pre id="jsonOutput"></pre>
+        </div>
+    </div>
+
+    <!-- Modular Scripts -->
+    <script src="./api-service.js"></script>
+    <script src="./weather-config.js"></script>
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
