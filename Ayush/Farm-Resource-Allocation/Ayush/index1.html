@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Page – Premium UI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glass-header {
+      width: 90%;
+      padding: 1.5rem 2rem;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, #ff6b6b, #f8e71c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cta-button {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="glass-header">
+    <h1>Premium Demo Page</h1>
+  </header>
+  <main>
+    <button class="cta-button" onclick="window.location.href='login.html'">Go to Login</button>
+  </main>
+  <footer>
+    © 2026 AgriOptima – All rights reserved.
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriOptima | Smart Farm Resource Allocation Planner</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="glass-header">
+        <nav>
+            <div class="logo" data-translate="app_title">Agri<span>Optima</span></div>
+            <div class="header-controls">
+                <div class="mode-toggle-container">
+                    <span class="mode-label pro" data-translate="pro_mode">Pro Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="modeInput">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="mode-label farmer" data-translate="farmer_mode">Farmer Mode</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#planner">Planner</a></li>
+                    <li><a href="index1.html">Demo Page</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="planner" style="justify-content: center; padding-top: 6rem;">
+            <div class="hero-content" style="margin: 0 auto; max-width: 650px; text-align: center;">
+                <h1>Data-Driven <span class="gradient-text">Farm Planning</span></h1>
+                <p>Optimize your layout, irrigation, and crop yield utilizing advanced data modeling tailored for India.
+                </p>
+
+                <div class="input-panel glass-panel form-scroll-container" style="text-align: left;">
+                    <h3 data-translate="step_1_title">Optimization Constraints</h3>
+                    <form id="farmForm">
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="state" data-translate="state">Indian State/UT</label>
+                                <select id="state" name="state" required>
+                                    <option value="" disabled selected>Select State / UT</option>
+
+                                    <!-- 28 States -->
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+
+                                    <!-- 8 Union Territories -->
+                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                    <option value="Chandigarh">Chandigarh</option>
+                                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and
+                                        Daman and Diu</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                    <option value="Ladakh">Ladakh</option>
+                                    <option value="Lakshadweep">Lakshadweep</option>
+                                    <option value="Puducherry">Puducherry</option>
+                                </select>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="district" data-translate="district">Indian District</label>
+                                <select id="district" name="district" required disabled>
+                                    <option value="" disabled selected>Select District</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="block">Indian Block</label>
+                                <select id="block" name="block" required disabled>
+                                    <option value="" disabled selected>Select Block</option>
+                                </select>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="month" data-translate="month">Planting Month</label>
+                                <select id="month" name="month" required>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="landSize" data-translate="land_size">Land Size (Acres)</label>
+                                <input type="number" id="landSize" name="landSize" placeholder="100" required min="1"
+                                    step="0.5">
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="soilType" data-translate="soil_type">Soil Type</label>
+                                <select id="soilType" name="soilType" required>
+                                    <option value="loamy">Loamy</option>
+                                    <option value="sandy">Sandy</option>
+                                    <option value="clay">Clay</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="waterAvailable" data-translate="water_available">Water Available
+                                    (Liters)</label>
+                                <input type="number" id="waterAvailable" name="waterAvailable" placeholder="50000"
+                                    required min="1000">
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="soilPh" data-translate="soil_ph">Soil pH Level <span style="font-size: 0.8em; color: #999; font-weight: normal;">(Optional)</span></label>
+                                <input type="number" id="soilPh" name="soilPh" placeholder="6.5" step="0.1" min="4"
+                                    max="9">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="totalBudget" data-translate="total_budget">Total Budget (₹)</label>
+                                <input type="number" id="totalBudget" name="totalBudget" placeholder="500000" required
+                                    min="10000">
+                            </div>
+                        </div>
+
+                        <div id="formError" class="form-error hidden"
+                            style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <i class="fas fa-exclamation-circle"></i> <span>Please fill in all agricultural parameters
+                                to generate insights.</span>
+                        </div>
+
+                        <button type="submit" id="optimizeBtn" class="primary-btn" data-translate="optimize_btn">Run
+                            Engine</button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+
+    <!-- Modular Scripts -->
+    <script src="./api-service.js"></script>
+    <script src="./weather-config.js"></script>
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
