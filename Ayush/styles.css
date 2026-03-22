@@ -1951,3 +1951,132 @@ body.farmer-mode .hero-content {
     border: 1px solid rgba(16, 185, 129, 0.4);
     animation: softPulse 2s infinite;
 }
+
+/* -----------------------------
+   Responsive / Mobile Tweaks
+   Stacks hero, makes forms full-width, hides desktop nav links
+   ----------------------------- */
+@media (max-width: 900px) {
+    .glass-header {
+        padding: 0.8rem 4%;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    .nav-links {
+        display: none; /* hide desktop nav on smaller screens */
+    }
+
+    .header-controls {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .hero {
+        flex-direction: column;
+        align-items: center;
+        padding: 5.5rem 4% 3rem;
+        gap: 1.5rem;
+        min-height: 0;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 0.5rem;
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 2.1rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* Hide any large visual column that assumes desktop width */
+    .hero-visual {
+        display: none;
+    }
+
+    /* Make input panels full width and easier to scroll */
+    .input-panel {
+        width: 100%;
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .form-group.half-width,
+    .form-group.full-width {
+        width: 100%;
+        flex: none;
+    }
+
+    .primary-btn {
+        font-size: 0.98rem;
+        padding: 0.75rem 1rem;
+        margin-top: 0.75rem;
+    }
+
+    .floating-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+
+    .glass-panel:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-header {
+        padding: 0.6rem 3%;
+    }
+
+    .logo {
+        font-size: 1.05rem;
+    }
+
+    .hero-content h1 {
+        font-size: 1.6rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+    }
+
+    /* make watermark less obtrusive on very small screens */
+    .farmer-bg::after {
+        right: 2vw;
+        bottom: 2vh;
+        font-size: 30vw;
+        opacity: 0.04;
+    }
+
+    /* Improve touch targets */
+    .primary-btn {
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+    }
+}
